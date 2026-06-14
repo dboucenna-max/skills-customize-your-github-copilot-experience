@@ -1,65 +1,64 @@
+from typing import Optional, List
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from typing import Optional, Dict
-import uvicorn
+
+app = FastAPI()
 
 
-class ItemCreate(BaseModel):
+class Item(BaseModel):
+    id: Optional[int] = None
     name: str
     description: Optional[str] = None
+    price: float
 
 
-class Item(ItemCreate):
-    id: int
+# Simple in-memory storage
+items: List[Item] = []
+next_id = 1
 
 
-app = FastAPI(title="FastAPI Starter - Assignment")
-
-
-# In-memory storage
-_items: Dict[int, Item] = {}
-_next_id = 1
-
-
-@app.post("/items", response_model=Item, status_code=201)
-def create_item(payload: ItemCreate):
-    global _next_id
-    item = Item(id=_next_id, **payload.dict())
-    _items[_next_id] = item
-    _next_id += 1
-    return item
-
-
-@app.get("/items", response_model=list[Item])
+@app.get("/items", response_model=List[Item])
 def list_items():
-    return list(_items.values())
+    return items
 
 
 @app.get("/items/{item_id}", response_model=Item)
 def get_item(item_id: int):
-    item = _items.get(item_id)
-    if not item:
-        raise HTTPException(status_code=404, detail="Item not found")
+    for it in items:
+        if it.id == item_id:
+            return it
+    raise HTTPException(status_code=404, detail="Item not found")
+
+
+@app.post("/items", response_model=Item, status_code=201)
+def create_item(item: Item):
+    global next_id
+    item.id = next_id
+    next_id += 1
+    items.append(item)
     return item
 
 
 @app.put("/items/{item_id}", response_model=Item)
-def update_item(item_id: int, payload: ItemCreate):
-    item = _items.get(item_id)
-    if not item:
-        raise HTTPException(status_code=404, detail="Item not found")
-    updated = Item(id=item_id, **payload.dict())
-    _items[item_id] = updated
-    return updated
+def update_item(item_id: int, updated: Item):
+    for idx, it in enumerate(items):
+        if it.id == item_id:
+            updated.id = item_id
+            items[idx] = updated
+            return updated
+    raise HTTPException(status_code=404, detail="Item not found")
 
 
 @app.delete("/items/{item_id}", status_code=204)
 def delete_item(item_id: int):
-    if item_id not in _items:
-        raise HTTPException(status_code=404, detail="Item not found")
-    del _items[item_id]
-    return None
+    for idx, it in enumerate(items):
+        if it.id == item_id:
+            items.pop(idx)
+            return
+    raise HTTPException(status_code=404, detail="Item not found")
 
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="127.0.0.1", port=8000, reload=True)
+    import uvicorn
+
+    uvicorn.run("starter-code:app", host="127.0.0.1", port=8000, reload=True)

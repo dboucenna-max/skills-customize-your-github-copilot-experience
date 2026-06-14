@@ -1,80 +1,58 @@
-# 🛠️ Building REST APIs with FastAPI
+# 📘 Assignment: Building REST APIs with FastAPI
 
 ## 🎯 Objective
 
-Learn how to build a simple REST API using the FastAPI framework. You'll create endpoints, validate input with Pydantic models, and run the app locally to explore automatic API docs.
+Build a small REST API using the FastAPI framework to learn request handling, data validation with Pydantic, and creating OpenAPI-driven documentation.
 
 ## 📝 Tasks
 
-### 🛠️ Create a CRUD API for `Item`
+### 🛠️ Implement a CRUD API for `Item`
 
 #### Description
-Implement a small REST API that manages `Item` resources. The API should allow creating, reading, updating, and deleting items using JSON over HTTP. Use the provided starter code to get started quickly.
+Create a FastAPI application that provides endpoints to create, read, update, and delete `Item` resources. Use an in-memory store for simplicity and provide clear JSON request and response formats.
 
 #### Requirements
 Completed program should:
 
-- Provide endpoints for: create (`POST /items`), list (`GET /items`), retrieve (`GET /items/{id}`), update (`PUT /items/{id}`), and delete (`DELETE /items/{id}`).
-- Use Pydantic models for request validation and response serialization.
-- Return appropriate HTTP status codes (`201` for create, `404` for not found, etc.).
-- Handle invalid input with clear error responses.
-- Store data in-memory (dictionary or list) so the API is self-contained for the assignment.
-- Expose interactive API docs at `/docs` (FastAPI provides this by default).
+- Provide endpoints: `GET /items`, `GET /items/{id}`, `POST /items`, `PUT /items/{id}`, `DELETE /items/{id}`.
+- Validate request bodies using Pydantic models and return appropriate status codes (`201` for creation, `404` for missing resources, etc.).
+- Return JSON responses and meaningful error messages for invalid data.
+- Include minimal inline documentation and run via `uvicorn`.
 
-### ✨ Optional Enhancements
-
-- Add query parameters for filtering or pagination on `GET /items`.
-- Persist items to a simple JSON file between runs.
-- Add authentication (API key) for write operations.
-
-#### Example Requests
-
-Create item:
+#### Example request/response
 
 ```
 POST /items
 {
   "name": "Notebook",
-  "description": "A small notebook"
+  "description": "College ruled",
+  "price": 3.5
 }
 
-Response: 201
+Response 201 Created
 {
   "id": 1,
   "name": "Notebook",
-  "description": "A small notebook"
+  "description": "College ruled",
+  "price": 3.5
 }
 ```
 
-List items:
+#### How to run
 
-```
-GET /items
-
-Response: 200
-[
-  {"id":1, "name":"Notebook", "description":"A small notebook"}
-]
-```
-
-Starter code: `starter-code.py` in this folder.
-
-## Run locally
-
-1. Create a virtual environment and install requirements:
+From this folder:
 
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
+python -m pip install -r requirements.txt
+python -m uvicorn starter-code:app --reload --port 8000
 ```
 
-2. Start the app:
+Open the interactive docs at `http://127.0.0.1:8000/docs`.
 
-```bash
-python starter-code.py
-```
+### ✨ Optional Enhancements
 
-3. Open the interactive docs at: http://127.0.0.1:8000/docs
+- Persist items to SQLite using SQLModel or SQLAlchemy.
+- Add filtering, pagination, or search to `GET /items`.
+- Protect endpoints with simple API key authentication.
 
-Good luck — build a working API and try the optional enhancements when you're ready.
+Starter code: `starter-code.py` (edit and run from this folder).
