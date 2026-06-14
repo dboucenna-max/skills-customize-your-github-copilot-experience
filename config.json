@@ -49,7 +49,7 @@
       "attachments": [
         {
           "name": "Starter Code",
-          "file": "starter-code.py",
+          "file": "starter_code.py",
           "type": "python"
         },
         {
@@ -76,6 +76,26 @@
           "name": "Requirements",
           "file": "requirements.txt",
           "type": "text"
+        }
+      ]
+    }
+    ,
+    {
+      "id": "unit-testing-ci",
+      "title": "Unit Testing & Local CI with pytest",
+      "description": "Write pytest unit tests and create a local test runner script.",
+      "path": "assignments/unit-testing-ci",
+      "dueDate": "2026-07-01",
+      "attachments": [
+        {
+          "name": "Starter Code",
+          "file": "starter-code.py",
+          "type": "python"
+        },
+        {
+          "name": "Test Runner",
+          "file": "run_tests.sh",
+          "type": "shell"
         }
       ]
     }
